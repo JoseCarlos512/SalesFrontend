@@ -1,0 +1,55 @@
+<div class="list-header">
+  <h2>Ingresos</h2>
+  <button mat-flat-button color="primary" routerLink="new">
+    <mat-icon>add</mat-icon> Nuevo Ingreso
+  </button>
+</div>
+
+<mat-card>
+  <mat-card-content>
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Buscar</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Comprobante, proveedor...">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <div class="table-container">
+      <mat-spinner *ngIf="loading" diameter="40"></mat-spinner>
+
+      <table mat-table [dataSource]="dataSource" *ngIf="!loading">
+        <ng-container matColumnDef="numComprobante">
+          <th mat-header-cell *matHeaderCellDef>Comprobante</th>
+          <td mat-cell *matCellDef="let row">{{ row.serieComprobante }}-{{ row.numComprobante }}</td>
+        </ng-container>
+        <ng-container matColumnDef="tipoComprobante">
+          <th mat-header-cell *matHeaderCellDef>Tipo</th>
+          <td mat-cell *matCellDef="let row">{{ row.tipoComprobante }}</td>
+        </ng-container>
+        <ng-container matColumnDef="proveedor">
+          <th mat-header-cell *matHeaderCellDef>Proveedor</th>
+          <td mat-cell *matCellDef="let row">{{ row.provider?.nombre ?? '—' }}</td>
+        </ng-container>
+        <ng-container matColumnDef="total">
+          <th mat-header-cell *matHeaderCellDef>Total</th>
+          <td mat-cell *matCellDef="let row">S/ {{ row.total | number:'1.2-2' }}</td>
+        </ng-container>
+        <ng-container matColumnDef="estado">
+          <th mat-header-cell *matHeaderCellDef>Estado</th>
+          <td mat-cell *matCellDef="let row">{{ row.estado ?? '—' }}</td>
+        </ng-container>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Acciones</th>
+          <td mat-cell *matCellDef="let row">
+            <button mat-icon-button color="warn" (click)="delete(row)"><mat-icon>delete</mat-icon></button>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" [attr.colspan]="displayedColumns.length" style="text-align:center;padding:16px">Sin resultados</td>
+        </tr>
+      </table>
+      <mat-paginator [pageSizeOptions]="[10, 25]" showFirstLastButtons></mat-paginator>
+    </div>
+  </mat-card-content>
+</mat-card>

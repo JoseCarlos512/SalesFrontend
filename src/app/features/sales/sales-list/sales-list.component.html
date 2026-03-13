@@ -1,0 +1,90 @@
+<div class="list-header">
+  <h2>Ventas</h2>
+  <button mat-flat-button color="primary" routerLink="new">
+    <mat-icon>add</mat-icon> Nueva Venta
+  </button>
+</div>
+
+<mat-card>
+  <mat-card-content>
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Buscar</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Comprobante, cliente...">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <div class="table-container">
+      <mat-spinner *ngIf="loading" diameter="40"></mat-spinner>
+
+      <table mat-table [dataSource]="dataSource" matSort *ngIf="!loading">
+        <ng-container matColumnDef="numComprobante">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Comprobante</th>
+          <td mat-cell *matCellDef="let row">{{ row.serieComprobante }}-{{ row.numComprobante }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="tipoComprobante">
+          <th mat-header-cell *matHeaderCellDef>Tipo</th>
+          <td mat-cell *matCellDef="let row">{{ row.tipoComprobante === '01' ? 'Factura' : 'Boleta' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="cliente">
+          <th mat-header-cell *matHeaderCellDef>Cliente</th>
+          <td mat-cell *matCellDef="let row">
+            {{ row.person ? (row.person.nombres + ' ' + row.person.apellidos) : '—' }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="total">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Total</th>
+          <td mat-cell *matCellDef="let row">S/ {{ row.total | number:'1.2-2' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="estado">
+          <th mat-header-cell *matHeaderCellDef>Estado</th>
+          <td mat-cell *matCellDef="let row">
+            <span class="estado-chip" [ngClass]="estadoClass(row.estado)">
+              {{ row.estado ?? 'PENDIENTE' }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="sunat">
+          <th mat-header-cell *matHeaderCellDef>SUNAT</th>
+          <td mat-cell *matCellDef="let row">
+            <button
+              mat-icon-button
+              color="accent"
+              matTooltip="Enviar a SUNAT"
+              (click)="sendToSunat(row)"
+              [disabled]="sendingId === row.id || row.estado === 'ACEPTADO'">
+              <mat-spinner diameter="20" *ngIf="sendingId === row.id"></mat-spinner>
+              <mat-icon *ngIf="sendingId !== row.id">send</mat-icon>
+            </button>
+            <small *ngIf="row.sunatDescripcion" class="sunat-desc" [title]="row.sunatDescripcion">
+              {{ row.sunatCodigo }}
+            </small>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Acciones</th>
+          <td mat-cell *matCellDef="let row">
+            <button mat-icon-button color="warn" (click)="delete(row)" matTooltip="Eliminar">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" [attr.colspan]="displayedColumns.length" style="text-align:center;padding:16px">
+            Sin resultados
+          </td>
+        </tr>
+      </table>
+
+      <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
+    </div>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,43 @@
+<h2>Dashboard</h2>
+
+<div *ngIf="loading" class="loading-center">
+  <mat-spinner></mat-spinner>
+</div>
+
+<div *ngIf="!loading" class="stats-grid">
+  <mat-card>
+    <mat-card-content>
+      <div class="stat-card">
+        <mat-icon color="primary">inventory_2</mat-icon>
+        <div>
+          <div class="stat-value">{{ stats.articles }}</div>
+          <div class="stat-label">Artículos</div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-content>
+      <div class="stat-card">
+        <mat-icon color="accent">point_of_sale</mat-icon>
+        <div>
+          <div class="stat-value">{{ stats.sales }}</div>
+          <div class="stat-label">Ventas</div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-content>
+      <div class="stat-card">
+        <mat-icon color="warn">people</mat-icon>
+        <div>
+          <div class="stat-value">{{ stats.clients }}</div>
+          <div class="stat-label">Clientes</div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
