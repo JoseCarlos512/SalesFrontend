@@ -3,9 +3,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
-import { User, Rol } from '../../../core/models/user.model';
+import { UserDetail, Rol } from '../../../core/models/user.model';
 
-export interface UserDialogData { user?: User; }
+export interface UserDialogData { user?: UserDetail; }
 
 @Component({
   selector: 'app-user-dialog',
@@ -26,8 +26,7 @@ export class UserDialogComponent implements OnInit {
     this.isEdit = !!data?.user;
     const u = data?.user;
     const group: Record<string, unknown> = {
-      nombre: [u?.nombre ?? '', Validators.required],
-      email: [u?.email ?? '', [Validators.required, Validators.email]],
+      usuario: [u?.usuario ?? '', Validators.required],
       idRol: [u?.rol?.id ?? null, Validators.required]
     };
     if (!this.isEdit) {
